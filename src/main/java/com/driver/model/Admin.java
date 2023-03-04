@@ -19,9 +19,9 @@ public class Admin {
     public Admin() {
     }
 
-    public Admin(int id, String userName, String password, List<ServiceProvider> serviceProviders) {
+    public Admin(int id, String username, String password, List<ServiceProvider> serviceProviders) {
         this.id = id;
-        this.username = userName;
+        this.username = username;
         this.password = password;
         this.serviceProviders = serviceProviders;
     }
@@ -37,11 +37,11 @@ public class Admin {
         this.id = id;
     }
 
-    public String getUserName() {
+    public String getUsername() {
         return username;
     }
 
-    public void setUserName(String userName) {
+    public void setUsername(String userName) {
         this.username = userName;
     }
 
