@@ -11,7 +11,7 @@ import com.driver.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.HashMap;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -26,58 +26,81 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin register(String username, String password) {
-        Admin admin=new Admin();
+        // create a new admin entity
+        Admin admin = new Admin();
         admin.setUsername(username);
         admin.setPassword(password);
+
+        // save the admin entity
         adminRepository1.save(admin);
         return admin;
     }
 
     @Override
     public Admin addServiceProvider(int adminId, String providerName) {
-        Admin admin=adminRepository1.findById(adminId).get();
-        ServiceProvider serviceProvider=new ServiceProvider();
+
+        // find the id from the table
+        Admin admin = adminRepository1.findById(adminId).get();
+        // create a new service provider
+        ServiceProvider serviceProvider = new ServiceProvider();
         serviceProvider.setName(providerName);
         serviceProvider.setAdmin(admin);
 
-        List<ServiceProvider> serviceProviderList=admin.getServiceProviders();
-        serviceProviderList.add(serviceProvider);
-        admin.setServiceProviders(serviceProviderList);
+        // set the provider list in admin
+        admin.getServiceProviders().add(serviceProvider);
+        //save the parent entity admin and child will saved automatically due to cascade effect
         adminRepository1.save(admin);
-
         return admin;
     }
 
     @Override
     public ServiceProvider addCountry(int serviceProviderId, String countryName) throws Exception{
-        ServiceProvider serviceProvider=serviceProviderRepository1.findById(serviceProviderId).get();
 
-        Country country=new Country();
-        String addCountry=countryName.toUpperCase();
-        CountryName enumCountry=null;
-        boolean present=false;
+        System.out.println(serviceProviderId+"  service provider id");
+        ServiceProvider serviceProvider = serviceProviderRepository1.findById(serviceProviderId).get();
 
-        for(CountryName name : CountryName.values()){
-            if(addCountry.equals(name)){
-                present=true;
-                enumCountry=name;
-                break;
-            }
+        HashMap<String, String> map = new HashMap<>();
+        map.put("IND","001");
+        map.put("USA","002");
+        map.put("AUS","003");
+        map.put("CHI","004");
+        map.put("JPN","005");
+
+        countryName = countryName.toUpperCase();
+
+        if(!map.containsKey(countryName)){
+            throw new Exception("Country not found");
+        }
+        Country country = new Country();
+        if(countryName.equals("IND")){
+            country.setCountryName(CountryName.IND);
+            country.setCode("001");
+        }
+        else if(countryName.equals("USA")){
+            country.setCountryName(CountryName.USA);
+            country.setCode("002");
+        }
+        else if(countryName.equals("AUS")){
+            country.setCountryName(CountryName.AUS);
+            country.setCode("003");
+        }
+        else if(countryName.equals("CHI")){
+            country.setCountryName(CountryName.CHI);
+            country.setCode("004");
+        }
+        else if(countryName.equals("JPN")){
+            country.setCountryName(CountryName.JPN);
+            country.setCode("005");
         }
 
-        if(!present) throw new Exception("Country not found");
+        country.setUser(null);
+        country.setServiceProvider(serviceProvider);
 
-        if(enumCountry!=null){
-            country.setCountryName(enumCountry);
-            country.setCode(enumCountry.toCode());
-            country.setUser(null);
-        }
+        // add country to the service provider list and save the service provider
+        serviceProvider.getCountryList().add(country);
 
-        List<Country> countries=serviceProvider.getCountryList();
-        countries.add(country);
-        serviceProvider.setCountryList(countries);
         serviceProviderRepository1.save(serviceProvider);
-
         return serviceProvider;
+
     }
 }

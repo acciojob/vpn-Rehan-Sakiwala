@@ -1,29 +1,36 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "serviceProviders")
+@Table(name = "service_provider")
 public class ServiceProvider {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     private String name;
 
     @ManyToOne
     @JoinColumn
     private Admin admin;
 
-    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
-    private List<Connection> connectionList;
 
+
+    // bidirectional mapping connection entity
+    @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
+    private List<Connection> connectionList = new ArrayList<>();
+
+    // bidirectional mapping with the user
     @ManyToMany
-    private List<User> users;
+    @JoinColumn
+    private List<User> users = new ArrayList<>();
 
+    // bidirectional mapping with the country
     @OneToMany(mappedBy = "serviceProvider",cascade = CascadeType.ALL)
-    private List<Country> countryList;
+    private List<Country> countryList = new ArrayList<>();
 
     public ServiceProvider() {
     }

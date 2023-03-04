@@ -1,20 +1,23 @@
 package com.driver.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "admins")
+@Table(name ="admin")
 public class Admin {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     private String username;
+
     private String password;
 
     @OneToMany(mappedBy = "admin",cascade = CascadeType.ALL)
-    List<ServiceProvider> serviceProviders;
+    private List<ServiceProvider> serviceProviders = new ArrayList<>();
 
     public Admin() {
     }
@@ -25,9 +28,6 @@ public class Admin {
         this.password = password;
         this.serviceProviders = serviceProviders;
     }
-
-    //Getters And Setters
-
 
     public int getId() {
         return id;
@@ -41,8 +41,8 @@ public class Admin {
         return username;
     }
 
-    public void setUsername(String userName) {
-        this.username = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {

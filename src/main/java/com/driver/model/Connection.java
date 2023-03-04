@@ -3,28 +3,30 @@ package com.driver.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "connections")
+@Table(name = "connection")
 public class Connection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @ManyToOne
-    @JoinColumn
-    private User user;
-
+    // for uni directional mapping for service provider
     @ManyToOne
     @JoinColumn
     private ServiceProvider serviceProvider;
 
-    public Connection(int id, User user, ServiceProvider serviceProvider) {
-        this.id = id;
-        this.user = user;
-        this.serviceProvider = serviceProvider;
-    }
+    // for uni directional mapping of the user
+    @ManyToOne
+    @JoinColumn
+    private User user;
 
     public Connection() {
+    }
+
+    public Connection(int id, ServiceProvider serviceProvider, User user) {
+        this.id = id;
+        this.serviceProvider = serviceProvider;
+        this.user = user;
     }
 
     public int getId() {
@@ -35,19 +37,19 @@ public class Connection {
         this.id = id;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
     public ServiceProvider getServiceProvider() {
         return serviceProvider;
     }
 
     public void setServiceProvider(ServiceProvider serviceProvider) {
         this.serviceProvider = serviceProvider;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
